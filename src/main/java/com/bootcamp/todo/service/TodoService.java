@@ -15,7 +15,12 @@ public class TodoService {
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
+
     public List<Todo> findAll() {
         return todoRepository.findAll();
+    }
+
+    public Todo save(Todo todo) {
+        return todoRepository.save(todo);
     }
 }

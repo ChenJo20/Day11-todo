@@ -2,6 +2,7 @@ package com.bootcamp.todo.controller;
 
 import com.bootcamp.todo.model.Todo;
 import com.bootcamp.todo.repository.TodoRepository;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -61,5 +63,31 @@ public class TodoControllerTest {
                                 .build()
                 )
                 .isEqualTo(givenTodos);
+    }
+
+    @Test
+    void should_save_todo_success() throws Exception {
+        // Given
+        todoRepository.deleteAll();
+        String givenText = "New Todo";
+        String givenTodo = String.format(
+                "{\"text\": \"%s\"}",
+                givenText
+        );
+
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.post("/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenTodo)
+                )
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(givenText));
+        List<Todo> todos = todoRepository.findAll();
+        assertThat(todos).hasSize(1);
+        AssertionsForClassTypes.assertThat(todos.get(0).getId()).isNotNull();
+        AssertionsForClassTypes.assertThat(todos.get(0).getText()).isEqualTo(givenText);
+        AssertionsForClassTypes.assertThat(todos.get(0).getDone()).isEqualTo(false);
     }
 }
