@@ -26,6 +26,11 @@ public class Todo {
     public Todo() {
     }
 
+    public void updateTodo(Todo todo) {
+        this.setDone(todo.done);
+        this.setText(todo.text);
+    }
+
     public Integer getId() {
         return id;
     }
@@ -49,4 +54,6 @@ public class Todo {
     public void setText(String text) {
         this.text = text;
     }
+
+
 }
