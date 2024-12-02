@@ -36,6 +36,7 @@ public class TodoControllerTest {
 
     @BeforeEach
     void setUp() {
+        todoRepository.deleteAll();
         todoRepository.flush();
         todoRepository.save(new Todo("text1"));
         todoRepository.save(new Todo("text2"));
@@ -163,6 +164,18 @@ public class TodoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenTodo))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void should_remove_todo_success_given_exists() throws Exception {
+        Todo existTodoId = todoRepository.findAll().get(0);
+        int givenId = existTodoId.getId();
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.delete("/todos/" + givenId))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        List<Todo> todos = todoRepository.findAll();
+        assertThat(todos).hasSize(4);
     }
 }
 

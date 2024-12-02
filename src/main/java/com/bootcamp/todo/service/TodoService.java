@@ -35,4 +35,8 @@ public class TodoService {
         existedTodo.updateTodo(todo);
         return todoRepository.save(existedTodo);
     }
+
+    public void delete(Integer id) {
+        todoRepository.deleteById(id);
+    }
 }
