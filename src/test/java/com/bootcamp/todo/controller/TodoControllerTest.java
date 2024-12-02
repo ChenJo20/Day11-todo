@@ -149,6 +149,21 @@ public class TodoControllerTest {
         AssertionsForClassTypes.assertThat(employees.get(0).getText()).isEqualTo(givenText);
         AssertionsForClassTypes.assertThat(employees.get(0).getDone()).isEqualTo(!givenDone);
     }
+
+    @Test
+    void should_throw_todo_not_found_exception_when_get_by_id_given_not_exists() throws Exception {
+        // Given
+        String givenTodo = String.format(
+                "{\"id\": %s}",
+                1
+        );
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.put("/todos/" + 12389)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenTodo))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 }
 
 
