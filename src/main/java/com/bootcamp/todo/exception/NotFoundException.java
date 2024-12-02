@@ -5,8 +5,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class NotFoundException extends RuntimeException {
+
+    public static final String TODO_NOT_EXIST = "找不到要更新的todo";
+
     public NotFoundException() {
-        super("找不到要更新的todo");
+        super(TODO_NOT_EXIST);
     }
 }
 
