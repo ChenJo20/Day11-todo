@@ -119,4 +119,36 @@ public class TodoControllerTest {
         AssertionsForClassTypes.assertThat(employees.get(0).getText()).isEqualTo(givenText);
         AssertionsForClassTypes.assertThat(employees.get(0).getDone()).isEqualTo(givenDone);
     }
+
+    @Test
+    void should_update_todo_done_status_success() throws Exception {
+        // Given
+        Todo existTodo = todoRepository.findAll().get(0);
+        Integer givenId = existTodo.getId();
+        String givenText = existTodo.getText();
+        Boolean givenDone = existTodo.getDone();
+        String givenTodo = String.format(
+                "{\"id\": %s, \"text\": \"%s\", \"done\": \"%s\"}",
+                givenId,
+                givenText,
+                !givenDone
+        );
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.put("/todos/" + givenId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenTodo)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(givenText))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(!givenDone));
+        List<Todo> employees = todoRepository.findAll();
+        assertThat(employees).hasSize(5);
+        AssertionsForClassTypes.assertThat(employees.get(0).getId()).isEqualTo(givenId);
+        AssertionsForClassTypes.assertThat(employees.get(0).getText()).isEqualTo(givenText);
+        AssertionsForClassTypes.assertThat(employees.get(0).getDone()).isEqualTo(!givenDone);
+    }
 }
+
+
