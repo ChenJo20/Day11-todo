@@ -23,17 +23,11 @@ public class TodoController {
 
     @Autowired
     private final TodoService todoService;
-    @Autowired
-    private TodoRepository todoRepository;
 
     public TodoController(TodoService todoService) {
         this.todoService = todoService;
     }
 
-    @GetMapping(path = "/hello")
-    public String Hello() {
-        return "Hello World";
-    }
 
     @GetMapping
     public List<Todo> getAllTodos() {
